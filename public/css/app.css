@@ -54,5 +54,11 @@ section.cart .amount {
 
 section.login {
   background: #f8f8f8;
-  min-height: 100vh;
+  min-height: calc(100vh - 100px);
+}
+section.login a {
+  color: #fe5f1e;
+}
+section.login a:hover {
+  color: #b23301;
 }

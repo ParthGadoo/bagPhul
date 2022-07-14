@@ -1,7 +1,9 @@
+const Product = require("../../models/product");
 function homeController() {
   return {
-    index(req, res) {
-      res.render("home");
+    async index(req, res) {
+      const products = await Product.find();
+      res.render("home", { products: products });
     },
   };
 }
