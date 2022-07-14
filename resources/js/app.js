@@ -5,7 +5,6 @@ let cartCounter = document.querySelector("#cartCounter");
 
 const updateCart = (product) => {
   axios.post("/update-cart", product).then((res) => {
-    console.log(res);
     cartCounter.innerText = res.data.totalQty;
   });
 };
