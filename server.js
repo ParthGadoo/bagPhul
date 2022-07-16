@@ -11,6 +11,7 @@ const session = require("express-session");
 const flash = require("express-flash");
 const MongoDbStore = require("connect-mongo");
 const passport = require("passport");
+const LocalStrategy = require("passport-local");
 
 const url = "mongodb://localhost:27017/bagPhul-test";
 
@@ -35,18 +36,22 @@ app.use(
     cookie: { maxAge: 1000 * 60 * 60 * 24 },
   })
 );
-const passportInit = require("./app/config/passport");
-passportInit(passport);
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(flash());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use((req, res, next) => {
   res.locals.session = req.session;
+  next();
+});
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
   next();
 });
 app.use(expressLayout);
