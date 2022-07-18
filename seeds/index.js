@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Product = require("../app/models/product");
 
-const url = "mongodb://localhost:27017/bagPhul-test";
+const url = "mongodb://localhost:27017/bagPhul-test2";
 
 mongoose
   .connect(url)
