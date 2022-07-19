@@ -62,21 +62,14 @@ function authController() {
             });
         }
       });
-      // const hashedPassword = await bcrypt.hash(password, 10);
-      // const user = new User({
-      //   name,
-      //   email,
-      //   password: hashedPassword,
-      // });
-      // user
-      //   .save()
-      //   .then((user) => {
-      //     return res.redirect("/");
-      //   })
-      //   .catch((err) => {
-      //     req.flash("error", "Something went wrong");
-      //     return res.redirect("/register");
-      //   });
+    },
+    logout(req, res, next) {
+      req.logout(function (err) {
+        if (err) {
+          return next(err);
+        }
+        res.redirect("/login");
+      });
     },
   };
 }

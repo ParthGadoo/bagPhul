@@ -35,6 +35,10 @@ app.use(
     cookie: { maxAge: 1000 * 60 * 60 * 24 },
   })
 );
+const passportInit = require("./app/config/passport");
+passportInit(passport);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(flash());
 app.use(express.static("public"));
@@ -43,18 +47,15 @@ app.use(express.json());
 
 app.use((req, res, next) => {
   res.locals.session = req.session;
+  res.locals.user = req.user;
   next();
 });
+
 // app.use((req, res, next) => {
 //   res.locals.success = req.flash("success");
 //   res.locals.error = req.flash("error");
 //   return next();
 // });
-
-const passportInit = require("./app/config/passport");
-passportInit(passport);
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(expressLayout);
 app.set("views", path.join(__dirname, "/resources/views"));
