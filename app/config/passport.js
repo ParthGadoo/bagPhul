@@ -11,7 +11,7 @@ function init(passport) {
           return done(null, false, { message: "No user with this email" });
         }
         bcrypt
-          .compare(passport, user.password)
+          .compare(password, user.password)
           .then((match) => {
             if (match) {
               return done(null, user, { message: "Logged in successfully" });
@@ -30,10 +30,12 @@ function init(passport) {
   });
 
   passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
+    User.find({ _id: id }, (err, user) => {
       done(err, user);
     });
   });
+  //   passport.serializeUser(User.serializeUser());
+  //   passport.deserializeUser(User.deserializeUser());
 }
 
 module.exports = init;
