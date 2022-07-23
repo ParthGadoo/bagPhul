@@ -78,6 +78,6 @@ eventEmitter.on("orderUpdated", (data) => {
   io.to(`order_${data.id}`).emit("orderUpdated", data);
 });
 
-eventEmitter.on("orderPlaced", () => {
+eventEmitter.on("orderPlaced", (data) => {
   io.to("adminRoom").emit("orderPlaced", data);
 });
