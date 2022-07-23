@@ -39,8 +39,6 @@ if (alertMsg) {
   }, 2000);
 }
 
-initAdmin();
-
 let statuses = document.querySelectorAll(".status_line");
 let hiddenInput = document.querySelector("#hiddenInput");
 let order = hiddenInput ? hiddenInput.value : null;
@@ -48,6 +46,10 @@ order = JSON.parse(order);
 
 let time = document.createElement("small");
 function updateStatus(order) {
+  statuses.forEach((status) => {
+    status.classList.remove("step-completed");
+    status.classList.remove("current");
+  });
   let stepCompleted = true;
   statuses.forEach((status) => {
     let dataProp = status.dataset.status;
@@ -66,3 +68,27 @@ function updateStatus(order) {
 }
 
 updateStatus(order);
+
+let socket = io();
+initAdmin(socket);
+
+if (order) {
+  socket.emit("join", `order_${order._id}`);
+}
+
+let adminAreaPath = window.location.pathname;
+if (adminAreaPath.includes("admin")) {
+  socket.emit("join", "adminRoom");
+}
+
+socket.on("orderUpdated", (data) => {
+  const updatedOrder = { ...order };
+  updatedOrder.updatedAt = moment().format();
+  updatedOrder.status = data.status;
+  updateStatus(updatedOrder);
+  new Noty({
+    text: "Order updated",
+    timeout: 1000,
+    type: "success",
+  }).show();
+});

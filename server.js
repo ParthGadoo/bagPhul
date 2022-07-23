@@ -11,6 +11,7 @@ const session = require("express-session");
 const flash = require("express-flash");
 const MongoDbStore = require("connect-mongo");
 const passport = require("passport");
+const Emitter = require("events");
 
 const url = "mongodb://localhost:27017/bagPhul-test2";
 
@@ -23,6 +24,10 @@ mongoose
     console.log("Database connection error");
     console.log(err);
   });
+
+const eventEmitter = new Emitter();
+
+app.set("eventEmitter", eventEmitter);
 
 app.use(
   session({
@@ -57,6 +62,22 @@ app.set("view engine", "ejs");
 
 require("./routes/web.js")(app);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Serving on port ${PORT}`);
+});
+
+const io = require("socket.io")(server);
+
+io.on("connection", (socket) => {
+  socket.on("join", (orderId) => {
+    socket.join(orderId);
+  });
+});
+
+eventEmitter.on("orderUpdated", (data) => {
+  io.to(`order_${data.id}`).emit("orderUpdated", data);
+});
+
+eventEmitter.on("orderPlaced", () => {
+  io.to("adminRoom").emit("orderPlaced", data);
 });
