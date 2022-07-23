@@ -51,12 +51,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use((req, res, next) => {
-//   res.locals.success = req.flash("success");
-//   res.locals.error = req.flash("error");
-//   return next();
-// });
-
 app.use(expressLayout);
 app.set("views", path.join(__dirname, "/resources/views"));
 app.set("view engine", "ejs");
