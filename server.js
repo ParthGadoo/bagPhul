@@ -13,7 +13,7 @@ const MongoDbStore = require("connect-mongo");
 const passport = require("passport");
 const Emitter = require("events");
 
-const url = "mongodb://localhost:27017/bagPhul-test2";
+const url = process.env.MONGO_CONNECTION_URL;
 
 mongoose
   .connect(url)
@@ -61,6 +61,10 @@ app.set("views", path.join(__dirname, "/resources/views"));
 app.set("view engine", "ejs");
 
 require("./routes/web.js")(app);
+
+app.use((req, res) => {
+  res.status(404).render("errors/404");
+});
 
 const server = app.listen(PORT, () => {
   console.log(`Serving on port ${PORT}`);
